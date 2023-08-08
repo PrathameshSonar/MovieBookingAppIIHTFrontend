@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MovieService from "../services/MovieService";
 
@@ -15,16 +15,15 @@ const AddMovie = () => {
     theaterName: "",
     noOfTicketsAvailable: 0,
     ticketStatus: "",
+    imageFile: undefined,
   });
+
+  useEffect(() => {
+    console.log(moviereq.imageFile);
+  }, [moviereq]);
+
   const [newMovieAddError, setNewMovieAddError] = useState("");
   const [hasErrors, setHasErrors] = useState(false);
-
-  // const handleChange = (event, index) => {
-  //   const { name, value } = event.target;
-  //   const theaters = [...movie.theaters];
-  //   theaters[index] = { ...theaters[index], [name]: value };
-  //   setMovie({ ...movie, theaters });
-  // };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,19 +32,7 @@ const AddMovie = () => {
     setNewMovieAddError("");
   };
 
-  // const handleAddTheater = () => {
-  //   setMovie({
-  //     ...movie,
-  //     theaters: [...movie.theaters, { theaterName: "", availableSeat: "", ticketStatus: "" }],
-  //   });
-  // };
   const handleAddTheater = (event) => {
-    // setMovieReq({
-    //   ...moviereq,
-    //   theaterName: "",
-    //   noOfTicketsAvailable: 0,
-    //   ticketStatus: "",
-    // });
     setMovieReq({
       ...moviereq,
       theaterName: event.target.value,
@@ -54,19 +41,6 @@ const AddMovie = () => {
     setNewMovieAddError("");
   };
 
-  // const handleRemoveTheater = (index) => {
-  //   const theaters = [...movie.theaters];
-  //   theaters.splice(index, 1);
-  //   setMovie({ ...movie, theaters });
-  // };
-  const handleRemoveTheater = () => {
-    setMovieReq({
-      ...moviereq,
-      theaterName: "",
-      noOfTicketsAvailable: 0,
-      ticketStatus: "",
-    });
-  };
   const verifyNewMovieReq = () => {
     if (moviereq.movieName === "") {
       setNewMovieAddError("Please enter the movie name...");
@@ -83,17 +57,18 @@ const AddMovie = () => {
   };
 
   const handleSubmit = (event) => {
+    verifyNewMovieReq();
     event.preventDefault();
-    //const firstTheater = movie.theaters[0];
 
-    // const updatedMovieReq = {
-    //   movieName: movie.movieName,
-    //   theaterName: firstTheater.theaterName,
-    //   noOfTicketsAvailable: firstTheater.availableSeat,
-    //   ticketStatus: firstTheater.ticketStatus,
-    // };
+    const formData = new FormData();
+    formData.append("movieName", moviereq.movieName);
+    formData.append("theaterName", moviereq.theaterName);
+    formData.append("noOfTicketsAvailable", moviereq.noOfTicketsAvailable);
+    formData.append("ticketStatus", moviereq.ticketStatus);
+    formData.append("imageFile", moviereq.imageFile);
+
     console.log("submitted the movie Req...");
-    MovieService.saveMovie(moviereq)
+    MovieService.saveMovie(formData)
       .then((response) => {
         navigate("/movieList");
       })
@@ -129,16 +104,7 @@ const AddMovie = () => {
           >
             Movie Name
           </label>
-          {/* <input
-            type="text"
-            id="movieName"
-            name="movieName"
-            value={movie.movieName}
-            onChange={(event) =>
-              setMovie({ ...movie, movieName: event.target.value })
-            }
-            className="w-4/5 p-2 border border-gray-300 rounded ml-3 mb-4"
-          /> */}
+
           <input
             type="text"
             id="movieName"
@@ -151,7 +117,6 @@ const AddMovie = () => {
         </div>
         <div className="container mx-auto">
           <div className="flex flex-col">
-            {/* {movie.theaters.map((theater, index) => ( */}
             <div className="mb-4 border-4 rounded">
               <div>
                 <label
@@ -160,26 +125,13 @@ const AddMovie = () => {
                 >
                   Theater Name
                 </label>
-                {/* <input
-                    type="text"
-                    id={`theaterName-${index}`}
-                    name="theaterName"
-                    value={theater.theaterName}
-                    onChange={(event) => handleChange(event, index)}
-                    className="w-4/5 p-1 border border-gray-300 rounded ml-3"
-                  /> */}
+
                 <input
                   type="text"
                   id={`theaterName`}
                   name="theaterName"
                   value={moviereq.theaterName}
-                  onChange={(event) =>
-                    // setMovieReq({
-                    //   ...moviereq,
-                    //   theaterName: event.target.value,
-                    // })
-                    handleAddTheater(event)
-                  }
+                  onChange={(event) => handleAddTheater(event)}
                   className="w-4/5 p-1 border border-gray-300 rounded ml-3"
                 />
               </div>
@@ -190,14 +142,7 @@ const AddMovie = () => {
                 >
                   Available Seat
                 </label>
-                {/* <input
-                    type="text"
-                    id={`noOfTicketsAvailable-${index}`}
-                    name="noOfTicketsAvailable"
-                    value={theater.availableSeat}
-                    onChange={(event) => handleChange(event, index)}
-                    className="w-4/5 p-1 border border-gray-300 rounded ml-3 mb-1"
-                  /> */}
+
                 <input
                   type="text"
                   id={`availableSeat`}
@@ -221,15 +166,7 @@ const AddMovie = () => {
                 >
                   Booking Status
                 </label>
-                {/* <select
-                    id={`ticketStatus-${index}`}
-                    name="ticketStatus"
-                    value={theater.ticketStatus}
-                    onChange={(event) => handleChange(event, index)}
-                    className="w-4/5 p-1 border border-gray-300 rounded ml-3 mb-2">
-                      <option value="BOOK ASAP">BOOK ASAP</option>
-                      <option value="SOLD OUT">SOLD OUT</option>
-                  </select> */}
+
                 <select
                   id={`ticketStatus`}
                   name="ticketStatus"
@@ -247,20 +184,32 @@ const AddMovie = () => {
                   <option value="BOOK ASAP">BOOK ASAP</option>
                   <option value="SOLD OUT">SOLD OUT</option>
                 </select>
-
-                {/* {theater.ticketStatus && <p>You selected: {theater.ticketStatus}</p>} */}
+                <div>
+                  <label
+                    htmlFor="imageFile"
+                    className="block font-medium mb-1 mt-2 ml-3"
+                  >
+                    Select Image
+                  </label>
+                  <input
+                    type="file"
+                    id="imageFile"
+                    name="imageFile"
+                    accept=".jpg,.jpeg,.png,.gif" // Restrict file types to images
+                    onChange={(event) =>
+                      setMovieReq({
+                        ...moviereq,
+                        imageFile: event.target.files[0],
+                      })
+                    }
+                    className="w-4/5 p-1 border border-gray-300 rounded ml-3 mb-1"
+                  />
+                </div>
               </div>
             </div>
-            {/* ))} */}
           </div>
         </div>
 
-        {/*  <button
-          type="button"
-          onClick={handleAddTheater}
-          className="block rounded-md bg-yellow-200 mb-4 text-blue-600 hover:text-blue-800 py-1 px-4"
-        >Add Theater
-        </button> */}
         {newMovieAddError && (
           <p className="mb-4 text-sm text-red-600">{newMovieAddError}</p>
         )}
@@ -268,7 +217,6 @@ const AddMovie = () => {
           <div className="items-center justify-center h-14 w-full my-4 space-x-4 pt-4">
             <button
               disabled={hasErrors}
-              onMouseOver={verifyNewMovieReq}
               onClick={handleSubmit}
               className="rounded mr-4 text-white font-semibold bg-green-400 hover:bg-green-700 py-2 px-6"
             >

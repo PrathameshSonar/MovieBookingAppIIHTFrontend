@@ -21,7 +21,7 @@ function App() {
           <Route path="/movieList" element={<MovieList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
-          <Route path="/reset-password" element={<ResetPassword/>} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/theater-list" element={<TheaterList />} />
           <Route path="/book-ticket" element={<BookTicket />} />
           <Route path="/add-movie" element={<AddNewMovie />} />

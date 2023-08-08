@@ -8,20 +8,16 @@ const BookTicket = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [bookedTicket, setbookedTicket] = useState(null);
+
   const tmovie = location.state && location.state.movie;
 
   const index = location.state && location.state.index;
-
-  // if (!tmovie) {
-  //    return <Navigate to="/" />;
-  // }
 
   const [loading, setLoading] = useState(true);
   const [ticketbookError, setticketbookError] = useState("");
   const [hasErrors, setHasErrors] = useState(false);
   const [bookingDetailsError, setBookingDetailsError] = useState("");
-
-  const [bookedTicket, setbookedTicket] = useState(null);
 
   const availableSeat = tmovie.noOfTicketsAvailable;
 

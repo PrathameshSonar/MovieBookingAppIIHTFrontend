@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const MOVIE_API_BASE_URL = "http://localhost:9090/api/v1.0/moviebooking";
+const MOVIE_API_BASE_URL = "http://54.205.176.96:8000/api/v1.0/moviebooking";
 //const ADMIN_TOKEN = sessionStorage.getItem('token');
 
 class MovieService {
@@ -13,12 +13,12 @@ class MovieService {
     return axios.post(MOVIE_API_BASE_URL + '/register', register);
   }
 
-  resetPassword(credentials,loginId) {
-    return axios.put(MOVIE_API_BASE_URL + "/"+loginId+ '/forgot', credentials);
+  resetPassword(credentials, loginId) {
+    return axios.put(MOVIE_API_BASE_URL + "/" + loginId + '/forgot', credentials);
   }
 
-  saveMovie(movie) {
-    return axios.post(MOVIE_API_BASE_URL + '/add', movie, {
+  saveMovie(data) {
+    return axios.post(MOVIE_API_BASE_URL + '/add', data, {
       headers: {
         'Authorization': sessionStorage.getItem('token')
       }
@@ -30,11 +30,11 @@ class MovieService {
   }
 
   getMoviesByMovieName(movieName) {
-    return axios.get(MOVIE_API_BASE_URL + '/movie'+'/search/'+ movieName);
+    return axios.get(MOVIE_API_BASE_URL + '/movie' + '/search/' + movieName);
   }
 
   deleteMovie(movieName) {
-    return axios.delete(MOVIE_API_BASE_URL +'/'+movieName+ '/delete/',  {
+    return axios.delete(MOVIE_API_BASE_URL + '/' + movieName + '/delete/', {
       headers: {
         'Authorization': sessionStorage.getItem('token')
       }
@@ -42,15 +42,15 @@ class MovieService {
   }
 
   getTheatersByMovieName(movieName) {
-    return axios.get(MOVIE_API_BASE_URL + "/theaters/" + movieName ,{
-      headers:{
-        'Authorization' :sessionStorage.getItem('token')
+    return axios.get(MOVIE_API_BASE_URL + "/theaters/" + movieName, {
+      headers: {
+        'Authorization': sessionStorage.getItem('token')
       }
     });
   }
 
   updateMovie(movie, movieName) {
-    return axios.put(MOVIE_API_BASE_URL + "/"+movieName+"/update", movie, {
+    return axios.put(MOVIE_API_BASE_URL + "/" + movieName + "/update", movie, {
       headers: {
         'Authorization': sessionStorage.getItem('token')
       }
@@ -58,7 +58,7 @@ class MovieService {
   }
 
   bookMovieTicket(moviebook, movieName) {
-    return axios.post(MOVIE_API_BASE_URL + "/"+movieName+"/add", moviebook,{
+    return axios.post(MOVIE_API_BASE_URL + "/" + movieName + "/add", moviebook, {
       headers: {
         'Authorization': sessionStorage.getItem('token')
       }
@@ -66,7 +66,7 @@ class MovieService {
   }
 
   updateTheater(movie, movieName, theaterName, ticket) {
-    return axios.put(MOVIE_API_BASE_URL + "/" + movieName + "/" +theaterName + "/update"+ ticket);
+    return axios.put(MOVIE_API_BASE_URL + "/" + movieName + "/" + theaterName + "/update" + ticket);
   }
 }
 

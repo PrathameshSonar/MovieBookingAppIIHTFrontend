@@ -9,7 +9,8 @@ const Navbar = () => {
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    console.log(token);
+    setIsLoggedIn(token);
   }, [isLoggedIn, location]);
 
   const handleLogoutClick = (e) => {
